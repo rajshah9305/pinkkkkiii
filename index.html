@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereal Bloom - A Pink Kush Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. Root Variables and Global Setup --- */
+        :root {
+            /* Color Palette */
+            --primary-bg: #0a0514;
+            --deep-purple: #1a0f2e;
+            --cosmic-purple: #2d1b4e;
+            --ethereal-pink: #ff6b9d;
+            --coral-glow: #ff8a80;
+            --golden-yellow: #ffcc80;
+            --mint-cyan: #80cbc4;
+            --lavender: #ce93d8;
+            --soft-white: #f8f4ff;
+            --warm-gray: #e0d4f0;
+            --card-bg: rgba(26, 15, 46, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            
+            /* Typography */
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Animation & Effects */
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --shadow-glow: 0 0 40px rgba(255, 107, 157, 0.3);
+            --shadow-deep: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 20% 80%, var(--ethereal-pink) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, var(--mint-cyan) 0%, transparent 40%),
+                radial-gradient(circle at 45% 45%, var(--lavender) 0%, transparent 50%),
+                linear-gradient(135deg, var(--primary-bg) 0%, var(--deep-purple) 50%, var(--cosmic-purple) 100%);
+            color: var(--soft-white);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* --- 2. Background Effects --- */
+        .cosmic-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .cosmic-particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatUp 25s linear infinite;
+        }
+        .particle-small { width: 2px; height: 2px; background: var(--mint-cyan); }
+        .particle-medium { width: 3px; height: 3px; background: var(--ethereal-pink); }
+        .particle-large { width: 4px; height: 4px; background: var(--golden-yellow); }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; transform: translateY(90vh) scale(1); }
+            100% { transform: translateY(-10vh) scale(0); opacity: 0; }
+        }
+
+        /* --- 3. Navigation & Progress Bar --- */
+        .story-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--ethereal-pink), var(--mint-cyan), var(--golden-yellow));
+            width: 0%;
+            transition: width 0.2s linear;
+        }
+
+        .chapter-nav {
+            position: fixed;
+            right: 2vw;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--glass-bg);
+            padding: 24px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chapter-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            position: relative;
+        }
+
+        .chapter-dot.active {
+            background: var(--mint-cyan);
+            transform: scale(1.5);
+            box-shadow: 0 0 20px var(--mint-cyan);
+        }
+        .chapter-dot:hover:not(.active) {
+            background: var(--ethereal-pink);
+            transform: scale(1.3);
+        }
+
+        /* --- 4. Core Layout & Content --- */
+        .chapter {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10vh 5vw; /* Use viewport units for responsive padding */
+            text-align: center;
+            position: relative;
+            /* FIX: Removed extra space by ensuring chapters flow naturally */
+            margin-bottom: 0; 
+        }
+
+        .content-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: clamp(30px, 5vw, 60px); /* Fluid padding */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: var(--shadow-deep);
+            max-width: 960px;
+            width: 100%;
+        }
+        
+        /* Typography Fix: Implemented fluid typography with clamp() */
+        .chapter-number {
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            color: var(--ethereal-pink);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .chapter-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 6vw, 4.5rem); /* Fluid font size */
+            font-weight: 600;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--ethereal-pink), var(--mint-cyan));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+        
+        .chapter-text {
+            font-size: clamp(1rem, 2vw, 1.2rem); /* Fluid font size */
+            line-height: 1.7;
+            color: var(--warm-gray);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* --- 5. Hero Section (Prologue) --- */
+        .story-title {
+            font-family: var(--font-display);
+            /* FIX: Scaled down hero title to fit viewport */
+            font-size: clamp(3.5rem, 12vw, 9rem);
+            font-weight: 400;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--ethereal-pink), var(--mint-cyan), var(--golden-yellow));
+            background-size: 300% 300%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 8s ease-in-out infinite;
+            text-shadow: 0 0 50px rgba(255, 107, 157, 0.3);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .story-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            color: var(--warm-gray);
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .begin-journey {
+            background: linear-gradient(135deg, var(--ethereal-pink), var(--coral-glow));
+            border: none;
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: var(--shadow-glow);
+        }
+        .begin-journey:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 0 60px rgba(255, 107, 157, 0.5);
+        }
+
+        /* --- 6. Interactive & Animated Sections --- */
+        .seed-scene, .growth-visual {
+            width: 100%;
+            height: 50vh; /* Reduced height to prevent excessive spacing */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .floating-seed {
+            width: clamp(100px, 15vw, 180px);
+            height: clamp(100px, 15vw, 180px);
+            background: radial-gradient(circle at center, var(--lavender) 20%, var(--cosmic-purple) 80%);
+            border-radius: 50%;
+            box-shadow: 0 0 50px var(--ethereal-pink), 0 0 100px var(--mint-cyan);
+            animation: seedFloat 12s ease-in-out infinite;
+        }
+        @keyframes seedFloat {
+            0%, 100% { transform: translateY(0) rotate(-10deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        .plant-stem {
+            width: 8px;
+            height: 0;
+            background: linear-gradient(to top, var(--mint-cyan), var(--golden-yellow));
+            border-radius: 8px 8px 0 0;
+            transition: height 4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .chapter-growth.visible .plant-stem { height: 80%; }
+
+        .senses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            width: 100%;
+            margin-top: 40px;
+        }
+        .sense-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--accent-color, var(--ethereal-pink));
+            transition: var(--transition-smooth);
+        }
+        .sense-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 40px var(--accent-color, var(--ethereal-pink));
+        }
+        .sense-card h3 {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 16px;
+            color: var(--accent-color, var(--ethereal-pink));
+        }
+        .sense-card.sight { --accent-color: var(--ethereal-pink); }
+        .sense-card.smell { --accent-color: var(--golden-yellow); }
+        .sense-card.touch { --accent-color: var(--coral-glow); }
+        .sense-card.taste { --accent-color: var(--lavender); }
+        .sense-card.feel { --accent-color: var(--mint-cyan); }
+        
+        .terpene-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            width: 100%;
+            margin-top: 40px;
+        }
+        .terpene-item {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            border-left: 3px solid var(--mint-cyan);
+            transition: var(--transition-smooth);
+        }
+        .terpene-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 0 40px rgba(128, 203, 196, 0.3);
+        }
+        .terpene-name {
+            font-family: var(--font-display);
+            font-weight: 600;
+            color: var(--mint-cyan);
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+        }
+
+        .award-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            width: 100%;
+            margin-top: 40px;
+        }
+        .award-item {
+            background: var(--card-bg);
+            border: 1px solid var(--golden-yellow);
+            border-radius: 16px;
+            padding: 32px;
+            transition: var(--transition-smooth);
+            text-align: center;
+        }
+        .award-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 50px rgba(255, 204, 128, 0.4);
+        }
+        .award-trophy { font-size: 3rem; margin-bottom: 16px; }
+        .award-year {
+            background: var(--golden-yellow);
+            color: var(--primary-bg);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+        .award-item h3 { font-size: 1.4rem; margin-bottom: 8px; }
+        .award-item p { color: var(--golden-yellow); font-weight: 500; }
+
+        .finale-quote {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 4vw, 2.8rem);
+            font-style: italic;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        /* --- 7. Animation Triggers --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- 8. Responsive Design --- */
+        @media (max-width: 768px) {
+            .chapter-nav {
+                display: none; /* Hide side navigation on smaller screens */
+            }
+            .senses-grid, .award-timeline {
+                grid-template-columns: 1fr; /* Stack cards on mobile */
+            }
+        }
+
+        /* --- 9. Accessibility --- */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cosmic-particles"></div>
+    <div class="story-progress"><div class="progress-bar"></div></div>
+
+    <nav class="chapter-nav"></nav>
+
+    <main>
+        <section class="chapter prologue" id="prologue">
+            <h1 class="story-title">Ethereal Bloom</h1>
+            <p class="story-subtitle">A Transcendent Journey Through Pink Kush</p>
+            <button class="begin-journey">Begin the Journey</button>
+        </section>
+
+        <section class="chapter chapter-seed" id="seed">
+            <div class="content-box fade-in">
+                <div class="chapter-number">Chapter One</div>
+                <h2 class="chapter-title">The Sacred Seed</h2>
+                <div class="seed-scene">
+                    <div class="floating-seed"></div>
+                </div>
+                <p class="chapter-text">From soil to soul, Pink Kush begins its mystical journey. We select genetics with an artist's consciousness, choosing seeds that hold the potential for unparalleled transcendence.</p>
+            </div>
+        </section>
+        
+        <section class="chapter chapter-growth" id="growth">
+            <div class="content-box fade-in">
+                <div class="chapter-number">Chapter Two</div>
+                <h2 class="chapter-title">Growth & Development</h2>
+                <div class="growth-visual">
+                    <div class="plant-stem"></div>
+                </div>
+                <p class="chapter-text">Life awakens in a symphony of cellular expansion. We nurture a thriving ecosystem in our living soil, allowing the purest expression of Pink Kush to emerge in all its ethereal glory.</p>
+            </div>
+        </section>
+
+        <section class="chapter chapter-senses" id="senses">
+            <div class="content-box fade-in">
+                <div class="chapter-number">Chapter Three</div>
+                <h2 class="chapter-title">Sensory Translation</h2>
+                <p class="chapter-text">Pink Kush awakens the consciousness with its complex symphony of earth, sweetness, and celestial floral notes, contributing to a profound experience of relaxation and euphoria.</p>
+                <div class="senses-grid">
+                    <div class="sense-card sight"><h3 >Sight</h3><p>Dense, frosty buds adorned with a constellation of trichomes that sparkle like cosmic diamonds.</p></div>
+                    <div class="sense-card smell"><h3 >Smell</h3><p>Sweet vanilla and cosmic candy unfold to reveal deeper, earthy undertones that ground you.</p></div>
+                    <div class="sense-card touch"><h3 >Touch</h3><p>The buds are sticky to the touch, a testament to their rich, resinous trichome coating.</p></div>
+                    <div class="sense-card taste"><h3 >Taste</h3><p>Remarkably smooth, with hints of sweet berries, cosmic spices, and a classic, earthy kush flavor.</p></div>
+                    <div class="sense-card feel"><h3 >Feel</h3><p>Waves of deep relaxation wash over the body like warm cosmic tides, with uplifting mental clarity.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="chapter chapter-molecular" id="molecular">
+            <div class="content-box fade-in">
+                <div class="chapter-number">Chapter Four</div>
+                <h2 class="chapter-title">Molecular Consciousness</h2>
+                <p class="chapter-text">At the microscopic level, aromatic compounds create the signature cosmic experience and legendary effects that have captivated consciousness explorers for generations.</p>
+                <div class="terpene-list">
+                    <div class="terpene-item"><div class="terpene-name">Myrcene</div><p>Earthy notes of sacred clove and fragrant cosmic herbs, grounding the consciousness.</p></div>
+                    <div class="terpene-item"><div class="terpene-name">Caryophyllene</div><p>A spicy, peppery warmth that adds cosmic complexity and dimensional depth.</p></div>
+                    <div class="terpene-item"><div class="terpene-name">Limonene</div><p>Bright, sweet citrus undertones that uplift the spirit and refresh the cosmic consciousness.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="chapter chapter-awards" id="awards">
+            <div class="content-box fade-in">
+                <div class="chapter-number">Chapter Five</div>
+                <h2 class="chapter-title">Cosmic Recognition</h2>
+                <p class="chapter-text">Excellence recognized by industry leaders. Pink Kush has earned its sacred place among the most celebrated strains in history, a testament to its transcendent qualities.</p>
+                <div class="award-timeline">
+                    <div class="award-item"><div class="award-trophy">🏆</div><div class="award-year">2023</div><h3>Cannabis Cup Winner</h3><p>Best Indica Strain</p></div>
+                    <div class="award-item"><div class="award-trophy">🏆</div><div class="award-year">2022</div><h3>Leafly Strain of the Year</h3><p>People's Choice Award</p></div>
+                    <div class="award-item"><div class="award-trophy">🏆</div><div class="award-year">2023</div><h3>High Times Award</h3><p>Top Canadian Strain</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="chapter chapter-finale" id="finale">
+            <div class="content-box fade-in">
+                <div class="chapter-number">Final Chapter</div>
+                <h2 class="chapter-title">The Experience Awaits</h2>
+                <blockquote class="finale-quote">"In each crystal lies a universe, in each breath, a moment of cosmic peace."</blockquote>
+                <button class="begin-journey">Experience the High</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    // FIX: Wrapped entire script in DOMContentLoaded to prevent errors from script running before the page is ready.
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- Element Selectors ---
+        const particleContainer = document.querySelector('.cosmic-particles');
+        const progressBar = document.querySelector('.progress-bar');
+        const chapterNav = document.querySelector('.chapter-nav');
+        const chapters = document.querySelectorAll('.chapter');
+        const animatedElements = document.querySelectorAll('.fade-in, .chapter-growth');
+        const beginJourneyButtons = document.querySelectorAll('.begin-journey');
+
+        // --- Particle Generation ---
+        function createParticles() {
+            if (!particleContainer) return;
+            const particleCount = 50; // Reduced for performance
+            const particleTypes = ['particle-small', 'particle-medium', 'particle-large'];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                const typeClass = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+                particle.className = `cosmic-particle ${typeClass}`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 20}s`;
+                particle.style.animationDuration = `${Math.random() * 15 + 15}s`;
+                particleContainer.appendChild(particle);
+            }
+        }
+
+        // --- Navigation Generation ---
+        function createNav() {
+            if (!chapterNav) return;
+            chapters.forEach(chapter => {
+                const dot = document.createElement('a'); // Use anchor tags for semantics
+                dot.classList.add('chapter-dot');
+                dot.href = `#${chapter.id}`;
+                dot.title = chapter.id.charAt(0).toUpperCase() + chapter.id.slice(1);
+                chapterNav.appendChild(dot);
+            });
+        }
+        
+        const dots = document.querySelectorAll('.chapter-dot');
+
+        // --- Intersection Observer for Animations ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        animatedElements.forEach(el => observer.observe(el));
+
+        // --- Scroll Handler ---
+        function handleScroll() {
+            // Progress Bar
+            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (window.scrollY / scrollableHeight) * 100;
+            if (progressBar) {
+                progressBar.style.width = `${progress}%`;
+            }
+
+            // Active Nav Dot
+            let currentChapterId = '';
+            const navOffset = window.innerHeight / 2;
+            chapters.forEach(chapter => {
+                if (window.scrollY >= chapter.offsetTop - navOffset) {
+                    currentChapterId = chapter.id;
+                }
+            });
+
+            dots.forEach(dot => {
+                // The link's href is '#chapter-id', we need to get just 'chapter-id'
+                const dotId = dot.getAttribute('href').substring(1);
+                dot.classList.toggle('active', dotId === currentChapterId);
+            });
+        }
+
+        // --- Event Listeners ---
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        beginJourneyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const firstChapter = document.getElementById('seed');
+                if (firstChapter) {
+                    firstChapter.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        
+        chapterNav.addEventListener('click', (e) => {
+            if (e.target.classList.contains('chapter-dot')) {
+                e.preventDefault();
+                const targetId = e.target.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+
+        // --- Initial Setup ---
+        createParticles();
+        createNav();
+        handleScroll(); // Initial check on load
+    });
+    </script>
+</body>
+</html>
