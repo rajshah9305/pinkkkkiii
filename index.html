@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- 1. Root Variables and Global Setup --- */
         :root {
@@ -139,6 +140,26 @@
             transform: scale(1.3);
         }
 
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: var(--glass-bg);
+            padding: 16px;
+            border-radius: 50px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-nav-inner {
+            display: flex;
+            gap: 20px;
+        }
+
         /* --- 4. Core Layout & Content --- */
         .chapter {
             min-height: 100vh;
@@ -146,25 +167,29 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 10vh 5vw; /* Use viewport units for responsive padding */
+            padding: 5vh 5vw;
             text-align: center;
             position: relative;
-            /* FIX: Removed extra space by ensuring chapters flow naturally */
-            margin-bottom: 0; 
+        }
+
+        /* Hero section spacing fix */
+        .prologue {
+            padding: 10vh 5vw;
         }
 
         .content-box {
             background: var(--card-bg);
             backdrop-filter: blur(15px);
             border-radius: 24px;
-            padding: clamp(30px, 5vw, 60px); /* Fluid padding */
+            padding: clamp(30px, 5vw, 60px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: var(--shadow-deep);
             max-width: 960px;
             width: 100%;
+            margin: 0 auto;
         }
         
-        /* Typography Fix: Implemented fluid typography with clamp() */
+        /* Typography Fix */
         .chapter-number {
             font-size: clamp(0.8rem, 1.5vw, 1rem);
             color: var(--ethereal-pink);
@@ -176,7 +201,7 @@
         
         .chapter-title {
             font-family: var(--font-display);
-            font-size: clamp(2.2rem, 6vw, 4.5rem); /* Fluid font size */
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 600;
             margin-bottom: 24px;
             background: linear-gradient(135deg, var(--ethereal-pink), var(--mint-cyan));
@@ -184,23 +209,45 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1.1;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .chapter-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--ethereal-pink), var(--mint-cyan));
+            border-radius: 3px;
         }
         
         .chapter-text {
-            font-size: clamp(1rem, 2vw, 1.2rem); /* Fluid font size */
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
             line-height: 1.7;
             color: var(--warm-gray);
             max-width: 720px;
-            margin: 0 auto;
+            margin: 0 auto 1.5rem;
         }
 
         /* --- 5. Hero Section (Prologue) --- */
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
         .story-title {
             font-family: var(--font-display);
-            /* FIX: Scaled down hero title to fit viewport */
-            font-size: clamp(3.5rem, 12vw, 9rem);
+            font-size: clamp(3rem, 10vw, 6rem);
             font-weight: 400;
-            letter-spacing: -2px;
+            letter-spacing: -1px;
             margin-bottom: 1rem;
             background: linear-gradient(135deg, var(--ethereal-pink), var(--mint-cyan), var(--golden-yellow));
             background-size: 300% 300%;
@@ -209,6 +256,7 @@
             -webkit-text-fill-color: transparent;
             animation: gradientShift 8s ease-in-out infinite;
             text-shadow: 0 0 50px rgba(255, 107, 157, 0.3);
+            line-height: 1.1;
         }
 
         @keyframes gradientShift {
@@ -217,11 +265,14 @@
         }
 
         .story-subtitle {
-            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
             font-weight: 300;
             color: var(--warm-gray);
             margin-bottom: 40px;
             font-style: italic;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .begin-journey {
@@ -237,20 +288,41 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             box-shadow: var(--shadow-glow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
+
+        .begin-journey::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--mint-cyan), var(--lavender));
+            z-index: -1;
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
         .begin-journey:hover {
             transform: translateY(-8px) scale(1.05);
             box-shadow: 0 0 60px rgba(255, 107, 157, 0.5);
         }
 
+        .begin-journey:hover::before {
+            opacity: 1;
+        }
+
         /* --- 6. Interactive & Animated Sections --- */
         .seed-scene, .growth-visual {
             width: 100%;
-            height: 50vh; /* Reduced height to prevent excessive spacing */
+            height: 30vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 40px;
+            margin: 30px 0;
         }
 
         .floating-seed {
@@ -272,15 +344,34 @@
             background: linear-gradient(to top, var(--mint-cyan), var(--golden-yellow));
             border-radius: 8px 8px 0 0;
             transition: height 4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
         .chapter-growth.visible .plant-stem { height: 80%; }
+
+        /* Animation for stem growth */
+        .plant-stem::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -15px;
+            width: 35px;
+            height: 35px;
+            background: radial-gradient(circle at center, var(--lavender) 20%, var(--cosmic-purple) 80%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--ethereal-pink);
+            transform: scale(0);
+            transition: transform 1s ease-in-out 3.5s;
+        }
+        .chapter-growth.visible .plant-stem::after {
+            transform: scale(1);
+        }
 
         .senses-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
             width: 100%;
-            margin-top: 40px;
+            margin-top: 30px;
         }
         .sense-card {
             background: var(--card-bg);
@@ -289,6 +380,19 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-top: 3px solid var(--accent-color, var(--ethereal-pink));
             transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+        .sense-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-color, var(--ethereal-pink)), transparent);
+            opacity: 0.1;
+            z-index: -1;
         }
         .sense-card:hover {
             transform: translateY(-10px);
@@ -296,7 +400,7 @@
         }
         .sense-card h3 {
             font-family: var(--font-display);
-            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
             margin-bottom: 16px;
             color: var(--accent-color, var(--ethereal-pink));
         }
@@ -311,7 +415,7 @@
             flex-direction: column;
             gap: 24px;
             width: 100%;
-            margin-top: 40px;
+            margin-top: 30px;
         }
         .terpene-item {
             background: var(--card-bg);
@@ -319,17 +423,30 @@
             padding: 32px;
             border-left: 3px solid var(--mint-cyan);
             transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
         }
         .terpene-item:hover {
             transform: translateX(10px);
             box-shadow: 0 0 40px rgba(128, 203, 196, 0.3);
+        }
+        .terpene-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--mint-cyan), transparent);
+            opacity: 0.1;
+            z-index: -1;
         }
         .terpene-name {
             font-family: var(--font-display);
             font-weight: 600;
             color: var(--mint-cyan);
             margin-bottom: 8px;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
         }
 
         .award-timeline {
@@ -337,7 +454,7 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
             width: 100%;
-            margin-top: 40px;
+            margin-top: 30px;
         }
         .award-item {
             background: var(--card-bg);
@@ -346,12 +463,29 @@
             padding: 32px;
             transition: var(--transition-smooth);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .award-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--golden-yellow), transparent);
+            opacity: 0.1;
+            z-index: -1;
         }
         .award-item:hover {
             transform: translateY(-10px);
             box-shadow: 0 0 50px rgba(255, 204, 128, 0.4);
         }
-        .award-trophy { font-size: 3rem; margin-bottom: 16px; }
+        .award-trophy { 
+            font-size: clamp(2.5rem, 5vw, 3rem); 
+            margin-bottom: 16px; 
+            text-shadow: 0 0 20px rgba(255, 204, 128, 0.6);
+        }
         .award-year {
             background: var(--golden-yellow);
             color: var(--primary-bg);
@@ -362,40 +496,210 @@
             margin-bottom: 16px;
             display: inline-block;
         }
-        .award-item h3 { font-size: 1.4rem; margin-bottom: 8px; }
-        .award-item p { color: var(--golden-yellow); font-weight: 500; }
+        .award-item h3 { 
+            font-size: clamp(1.2rem, 2.5vw, 1.4rem); 
+            margin-bottom: 8px; 
+        }
+        .award-item p { 
+            color: var(--golden-yellow); 
+            font-weight: 500; 
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+        }
 
         .finale-quote {
             font-family: var(--font-display);
-            font-size: clamp(1.5rem, 4vw, 2.8rem);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
             font-style: italic;
-            line-height: 1.5;
-            margin-bottom: 32px;
+            line-height: 1.4;
+            margin: 0 auto 32px;
+            max-width: 800px;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .finale-quote::before,
+        .finale-quote::after {
+            content: '"';
+            font-size: clamp(3rem, 6vw, 4rem);
+            color: var(--ethereal-pink);
+            opacity: 0.3;
+            position: absolute;
+            line-height: 1;
+        }
+
+        .finale-quote::before {
+            top: -10px;
+            left: -20px;
+        }
+
+        .finale-quote::after {
+            bottom: -30px;
+            right: -20px;
         }
 
         /* --- 7. Animation Triggers --- */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, 
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
         }
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* --- 8. Responsive Design --- */
-        @media (max-width: 768px) {
-            .chapter-nav {
-                display: none; /* Hide side navigation on smaller screens */
+        /* --- 8. Footer --- */
+        footer {
+            background: var(--deep-purple);
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            color: var(--soft-white);
+            font-size: 1.2rem;
+            transition: var(--transition-smooth);
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px);
+            background: var(--ethereal-pink);
+            box-shadow: 0 0 20px var(--ethereal-pink);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--warm-gray);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-links a:hover {
+            color: var(--ethereal-pink);
+        }
+
+        .copyright {
+            color: var(--warm-gray);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* --- 9. Back to Top Button --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--ethereal-pink);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition-smooth);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- 10. Responsive Design --- */
+        @media (max-width: 1024px) {
+            .chapter {
+                padding: 8vh 5vw;
             }
-            .senses-grid, .award-timeline {
-                grid-template-columns: 1fr; /* Stack cards on mobile */
+            .prologue {
+                padding: 12vh 5vw;
             }
         }
 
-        /* --- 9. Accessibility --- */
+        @media (max-width: 768px) {
+            .chapter-nav {
+                display: none;
+            }
+            .mobile-nav {
+                display: block;
+            }
+            .senses-grid, .award-timeline {
+                grid-template-columns: 1fr;
+            }
+            .seed-scene, .growth-visual {
+                height: 25vh;
+            }
+            .chapter-title {
+                font-size: clamp(1.8rem, 6vw, 2.5rem);
+            }
+            .story-title {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+            .sense-card, .terpene-item, .award-item {
+                padding: 24px;
+            }
+            .content-box {
+                padding: 25px;
+            }
+            .footer-links {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chapter {
+                padding: 7vh 4vw;
+            }
+            .prologue {
+                padding: 10vh 4vw;
+            }
+            .begin-journey {
+                padding: 16px 32px;
+            }
+            .seed-scene, .growth-visual {
+                height: 20vh;
+            }
+            .chapter-text {
+                font-size: 1rem;
+            }
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        /* --- 11. Accessibility --- */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation: none !important;
@@ -411,11 +715,18 @@
 
     <nav class="chapter-nav"></nav>
 
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <div class="mobile-nav-inner"></div>
+    </div>
+
     <main>
         <section class="chapter prologue" id="prologue">
-            <h1 class="story-title">Ethereal Bloom</h1>
-            <p class="story-subtitle">A Transcendent Journey Through Pink Kush</p>
-            <button class="begin-journey">Begin the Journey</button>
+            <div class="hero-content">
+                <h1 class="story-title">Ethereal Bloom</h1>
+                <p class="story-subtitle">A Transcendent Journey Through Pink Kush</p>
+                <button class="begin-journey">Begin the Journey</button>
+            </div>
         </section>
 
         <section class="chapter chapter-seed" id="seed">
@@ -446,11 +757,11 @@
                 <h2 class="chapter-title">Sensory Translation</h2>
                 <p class="chapter-text">Pink Kush awakens the consciousness with its complex symphony of earth, sweetness, and celestial floral notes, contributing to a profound experience of relaxation and euphoria.</p>
                 <div class="senses-grid">
-                    <div class="sense-card sight"><h3 >Sight</h3><p>Dense, frosty buds adorned with a constellation of trichomes that sparkle like cosmic diamonds.</p></div>
-                    <div class="sense-card smell"><h3 >Smell</h3><p>Sweet vanilla and cosmic candy unfold to reveal deeper, earthy undertones that ground you.</p></div>
-                    <div class="sense-card touch"><h3 >Touch</h3><p>The buds are sticky to the touch, a testament to their rich, resinous trichome coating.</p></div>
-                    <div class="sense-card taste"><h3 >Taste</h3><p>Remarkably smooth, with hints of sweet berries, cosmic spices, and a classic, earthy kush flavor.</p></div>
-                    <div class="sense-card feel"><h3 >Feel</h3><p>Waves of deep relaxation wash over the body like warm cosmic tides, with uplifting mental clarity.</p></div>
+                    <div class="sense-card sight"><h3>Sight</h3><p>Dense, frosty buds adorned with a constellation of trichomes that sparkle like cosmic diamonds.</p></div>
+                    <div class="sense-card smell"><h3>Smell</h3><p>Sweet vanilla and cosmic candy unfold to reveal deeper, earthy undertones that ground you.</p></div>
+                    <div class="sense-card touch"><h3>Touch</h3><p>The buds are sticky to the touch, a testament to their rich, resinous trichome coating.</p></div>
+                    <div class="sense-card taste"><h3>Taste</h3><p>Remarkably smooth, with hints of sweet berries, cosmic spices, and a classic, earthy kush flavor.</p></div>
+                    <div class="sense-card feel"><h3>Feel</h3><p>Waves of deep relaxation wash over the body like warm cosmic tides, with uplifting mental clarity.</p></div>
                 </div>
             </div>
         </section>
@@ -491,22 +802,44 @@
         </section>
     </main>
 
-    <script>
-    // FIX: Wrapped entire script in DOMContentLoaded to prevent errors from script running before the page is ready.
-    document.addEventListener('DOMContentLoaded', () => {
+    <footer>
+        <div class="social-links">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <div class="footer-links">
+            <a href="#">About Us</a>
+            <a href="#">Our Process</a>
+            <a href="#">Strains</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+        </div>
+        <p class="copyright">© 2023 Ethereal Bloom. All rights reserved. For medicinal use only where permitted.</p>
+    </footer>
 
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
         // --- Element Selectors ---
         const particleContainer = document.querySelector('.cosmic-particles');
         const progressBar = document.querySelector('.progress-bar');
         const chapterNav = document.querySelector('.chapter-nav');
+        const mobileNav = document.querySelector('.mobile-nav-inner');
         const chapters = document.querySelectorAll('.chapter');
         const animatedElements = document.querySelectorAll('.fade-in, .chapter-growth');
         const beginJourneyButtons = document.querySelectorAll('.begin-journey');
+        const backToTopBtn = document.getElementById('backToTop');
+        let dots = [];
 
         // --- Particle Generation ---
         function createParticles() {
             if (!particleContainer) return;
-            const particleCount = 50; // Reduced for performance
+            const particleCount = 50;
             const particleTypes = ['particle-small', 'particle-medium', 'particle-large'];
             
             for (let i = 0; i < particleCount; i++) {
@@ -522,52 +855,94 @@
 
         // --- Navigation Generation ---
         function createNav() {
-            if (!chapterNav) return;
-            chapters.forEach(chapter => {
-                const dot = document.createElement('a'); // Use anchor tags for semantics
-                dot.classList.add('chapter-dot');
-                dot.href = `#${chapter.id}`;
-                dot.title = chapter.id.charAt(0).toUpperCase() + chapter.id.slice(1);
-                chapterNav.appendChild(dot);
-            });
+            if (chapterNav) {
+                chapters.forEach(chapter => {
+                    const dot = document.createElement('a');
+                    dot.classList.add('chapter-dot');
+                    dot.href = `#${chapter.id}`;
+                    dot.title = chapter.id.charAt(0).toUpperCase() + chapter.id.slice(1);
+                    chapterNav.appendChild(dot);
+                });
+            }
+            
+            if (mobileNav) {
+                chapters.forEach(chapter => {
+                    const dot = document.createElement('a');
+                    dot.classList.add('chapter-dot');
+                    dot.href = `#${chapter.id}`;
+                    dot.title = chapter.id.charAt(0).toUpperCase() + chapter.id.slice(1);
+                    mobileNav.appendChild(dot);
+                });
+            }
+            
+            // Update dots array after creation
+            dots = document.querySelectorAll('.chapter-dot');
         }
-        
-        const dots = document.querySelectorAll('.chapter-dot');
 
         // --- Intersection Observer for Animations ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    
+                    // Special handling for growth animation
+                    if (entry.target.id === 'growth') {
+                        const stem = entry.target.querySelector('.plant-stem');
+                        if (stem) {
+                            // Reset height to trigger animation again
+                            stem.style.height = '0';
+                            setTimeout(() => {
+                                stem.style.height = '80%';
+                            }, 100);
+                        }
+                    }
+                    
+                    // Stop observing after animation triggers
+                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.2 });
+        }, { threshold: 0.15 });
 
         animatedElements.forEach(el => observer.observe(el));
 
         // --- Scroll Handler ---
         function handleScroll() {
             // Progress Bar
-            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = (window.scrollY / scrollableHeight) * 100;
             if (progressBar) {
+                const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = (window.scrollY / scrollableHeight) * 100;
                 progressBar.style.width = `${progress}%`;
             }
 
             // Active Nav Dot
             let currentChapterId = '';
-            const navOffset = window.innerHeight / 2;
+            const navOffset = window.innerHeight / 3;
+            
             chapters.forEach(chapter => {
-                if (window.scrollY >= chapter.offsetTop - navOffset) {
+                const chapterTop = chapter.offsetTop;
+                const chapterHeight = chapter.offsetHeight;
+                
+                if (window.scrollY >= chapterTop - navOffset && 
+                    window.scrollY < chapterTop + chapterHeight - navOffset) {
                     currentChapterId = chapter.id;
                 }
             });
 
-            dots.forEach(dot => {
-                // The link's href is '#chapter-id', we need to get just 'chapter-id'
-                const dotId = dot.getAttribute('href').substring(1);
-                dot.classList.toggle('active', dotId === currentChapterId);
-            });
+            if (dots.length) {
+                dots.forEach(dot => {
+                    const dotId = dot.getAttribute('href').substring(1);
+                    dot.classList.toggle('active', dotId === currentChapterId);
+                });
+            }
+
+            // Show/hide back to top button
+            if (backToTopBtn) {
+                if (window.scrollY > 500) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            }
         }
 
         // --- Event Listeners ---
@@ -582,7 +957,8 @@
             });
         });
         
-        chapterNav.addEventListener('click', (e) => {
+        // Navigation click handler (using event delegation)
+        document.addEventListener('click', (e) => {
             if (e.target.classList.contains('chapter-dot')) {
                 e.preventDefault();
                 const targetId = e.target.getAttribute('href');
@@ -593,10 +969,25 @@
             }
         });
 
+        // Back to top button
+        if (backToTopBtn) {
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
         // --- Initial Setup ---
         createParticles();
         createNav();
         handleScroll(); // Initial check on load
+        
+        // Trigger animations for visible elements on load
+        setTimeout(() => {
+            handleScroll();
+        }, 500);
     });
     </script>
 </body>
